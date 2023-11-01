@@ -1,0 +1,53 @@
+.card-container {
+    display: flex;
+    justify-content: center;
+  }
+  .card-container img {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+  }
+  
+  .card {
+    align-items: center;
+  }
+  
+  .basket-container {
+    margin-top: 300px;
+  }
+  
+  .basket-item {
+    display: flex;
+    background-color: steelblue;
+    padding: 0 20px;
+    border-radius: 12px;
+    color: white;
+    font-weight: bold;
+    justify-content: space-between;
+  }
+  
+  .basket-item p {
+    margin: 0;
+  }
+  
+  .basket-item img {
+    display: block;
+    height: 100px;
+    width: 100px;
+    object-fit: contain;
+  }
+  
+  .basket-item .left {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .basket-item .right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .basket-item .count {
+    padding: 0 10px;
+  }
