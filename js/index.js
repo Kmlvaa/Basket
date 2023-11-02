@@ -8,6 +8,7 @@ const cardButton = document.querySelector(".card-button");
 let totalPrice = document.querySelector(".total-price");
 let clearCart = document.querySelector(".clear-cart");
 
+//clear the cart when clicking button
 clearCart.addEventListener('click', () => {
   localStorage.removeItem("basket")
 })
@@ -19,8 +20,6 @@ products.forEach((product) => {
   let productCard = generateProductCard(id, name, price, imgName);
   productContainer.innerHTML += productCard;
 });
-
-
 
 // Get all "product add" buttons and assign the functionality of adding them to the basket
 // This code works only once per page load
@@ -45,7 +44,7 @@ renderBasketSection();
 
 // Helper function for generating product card
 function generateProductCard(id, name, price, imgName) {
-  
+
   let productCard = `
   <div class="col card-container">
     <div class="card" style="width: 18rem">
@@ -109,7 +108,7 @@ function renderBasketSection() {
     // Append basket item to basket container
     basketContainer.innerHTML += basketItem;
   });
-  
+
   cardButton.innerHTML += total_count + ")";
 
   // Append calculated basket value to total

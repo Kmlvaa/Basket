@@ -27,8 +27,6 @@
     border: 1px solid rgb(219, 213, 213);
     align-items: center;
   }
-
-  
   .basket-item .count {
     padding: 0 10px;
     width: 70px;
@@ -37,7 +35,6 @@
   .modal-body .total_price{
     margin-top: 20px;
   }
-
  .basket-container{
   display: flex;
   flex-direction: column;
