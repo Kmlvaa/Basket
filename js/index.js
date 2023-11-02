@@ -4,7 +4,14 @@ import { products } from "./data.js";
 // Getting html elements that will be manipulated
 const productContainer = document.querySelector(".product-container");
 const basketContainer = document.querySelector(".basket-container");
+const cardButton = document.querySelector(".card-button");
 let totalPrice = document.querySelector(".total-price");
+let clearCart = document.querySelector(".clear-cart");
+
+clearCart.addEventListener('click', () => {
+  localStorage.removeItem("basket")
+})
+
 
 // Rendering products in the main page
 products.forEach((product) => {
@@ -12,6 +19,8 @@ products.forEach((product) => {
   let productCard = generateProductCard(id, name, price, imgName);
   productContainer.innerHTML += productCard;
 });
+
+
 
 // Get all "product add" buttons and assign the functionality of adding them to the basket
 // This code works only once per page load
@@ -33,8 +42,10 @@ document.querySelectorAll(".add-to-basket-btn").forEach((btn) => {
 // Rendering basket items once the page starts (code below works 1 time per page load)
 renderBasketSection();
 
+
 // Helper function for generating product card
 function generateProductCard(id, name, price, imgName) {
+  
   let productCard = `
   <div class="col card-container">
     <div class="card" style="width: 18rem">
@@ -45,9 +56,7 @@ function generateProductCard(id, name, price, imgName) {
             />
             <div class="card-body">
               <h5 class="card-title">${name}</h5>
-              <p class="card-text">Price: <span class="price">${price.toFixed(
-                2
-              )}$</span></p>
+              <p class="card-text">Price: <span class="price">${price.toFixed(2)}$</span></p>
               <button data-id=${id} class="add-to-basket-btn  btn btn-primary">Add to card</button>
             </div>
           </div>
@@ -68,8 +77,12 @@ function renderBasketSection() {
 
   // Reset the content of basket container, so that duplicate basket items are avoided
   basketContainer.innerHTML = "";
+  cardButton.innerHTML = "Cart (";
 
   let total = 0;
+  let item_total = 0;
+  var total_count = 0;
+
 
   // Iterate through items in the basket that came from local storage and append them to basket container
   basket.forEach((x) => {
@@ -78,28 +91,29 @@ function renderBasketSection() {
     if (foundProduct == null) return;
     // Calculate products total price
     total += x.count * foundProduct.price;
-    let basketItem = `<div class="basket-item">
-        <div class="left">
-          <p>Product Name: <span>${foundProduct.name}</span></p>
-          <p>Product Price: <span>${foundProduct.price}</span></p>
-          <p>Image: <img src="./images/${foundProduct.imgName}" alt="" /></p>
-          <p>
-            Count: <button class="btn btn-secondary increase-btn" data-id=${x.id}>+</button
-            ><span class="count">${x.count}</span
-            ><button class="btn btn-secondary decrease-btn" data-id=${x.id}>-</button>
-          </p>
+    item_total = x.count * foundProduct.price;
+    total_count += x.count
+    let basketItem = `
+      <div class="basket-item">
+        <span>${foundProduct.name}</span> 
+        <span>(${foundProduct.price})</span>
+        <div class="count-btns">
+        <button class="btn btn-secondary increase-btn" style="background-color:lightgrey; border:none; color:black; border-radius: 3px;" data-id=${x.id}>+</button>
+        <span class="count">${x.count}</span>
+        <button class="btn btn-secondary decrease-btn" style="background-color:lightgrey; border:none; color:black; border-radius: 3px;" data-id=${x.id}>-</button>
         </div>
-        <div class="right">
-          <button class="btn btn-danger delete-btn" data-id=${x.id}>Delete from basket</button>
-        </div>
-      </div>`;
+        <button class="btn btn-danger delete-btn" style="width:40px;" data-id=${x.id}>X</button>
+        <div>$<span>${item_total.toFixed(2)}</span></div>
+    </div>`;
 
     // Append basket item to basket container
     basketContainer.innerHTML += basketItem;
   });
+  
+  cardButton.innerHTML += total_count + ")";
 
   // Append calculated basket value to total
-  totalPrice.innerHTML = total;
+  totalPrice.innerHTML = total.toFixed(2);
 
   // Take all "increase" buttons of basket items and assign the functionality
   document.querySelectorAll(".increase-btn").forEach((btn) => {
@@ -120,8 +134,9 @@ function renderBasketSection() {
       let id = e.target.getAttribute("data-id");
       let basket = JSON.parse(localStorage.getItem("basket"));
       let foundBasketItem = basket.find((x) => x.id == id);
-      if (foundBasketItem.count == 1) return;
+      if (foundBasketItem.count == 0) return;
       foundBasketItem.count--;
+      basket = basket.filter((x) => x.count != 0)
       localStorage.setItem("basket", JSON.stringify(basket));
       renderBasketSection();
     };
@@ -138,16 +153,3 @@ function renderBasketSection() {
     };
   });
 }
-
-// Better version of function that is written in line number: 18
-
-// document.querySelectorAll(".add-to-basket-btn").forEach((btn) => {
-//     btn.onclick = (e) => {
-//       let id = e.target.getAttribute("data-id");
-//       let basket = JSON.parse(localStorage.getItem("basket")) ?? [];
-//       if (basket.some((x) => x.id == id)) return;
-//       basket.push({ id, count: 1 });
-//       localStorage.setItem("basket", JSON.stringify(basket));
-//       renderBasketSection();
-//     };
-//   });
